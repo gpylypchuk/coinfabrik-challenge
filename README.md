@@ -1,6 +1,6 @@
 # Ethereum Pool 💸
 
-> Actually deployed at **[Goerli](https://goerli.etherscan.io/address/0x2c129be4e59f56d8995befb38022a2f3c714d7b6)**
+> Actually deployed and verified at **[Goerli](https://goerli.etherscan.io/address/0x86d1beb3ea0a7cda5bb24ff4d13c1f9079cd3c5d#code)**
 
 > Frontend _(with Nextjs, Typescript, Ethers and Ness.css)_ deployed at **[Vercel](https://challenge-interface-gpylypchuk.vercel.app/)**
 
