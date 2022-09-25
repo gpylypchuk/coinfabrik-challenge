@@ -1,0 +1,11 @@
+{
+  "name": "rest-api",
+  "version": "1.0.0",
+  "description": "rest api for interactions with ETHPool contract",
+  "main": "./src/app.py",
+  "keywords": [
+    "api"
+  ],
+  "author": "geronimo pylypchuk",
+  "license": "MIT"
+}
