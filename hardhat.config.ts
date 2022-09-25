@@ -1,16 +1,23 @@
-import { HardhatUserConfig } from "hardhat/config";
+import { HardhatUserConfig, task } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomiclabs/hardhat-etherscan";
 import * as dotenv from "dotenv";
-import { ethers } from "hardhat";
-import { task } from "hardhat/config";
 
 dotenv.config();
 
+// Total amount of ETH held in the contract (ETHPoolV1)
+// @run npx hardhat held --contract 0x2C129bE4E59F56D8995bEFB38022a2F3c714d7b6
+
+// DEPLOYED CONTRACT (ETHPoolV2): 0x86d1beB3Ea0a7cda5BB24Ff4d13c1f9079CD3c5d
+
 task("held", "Prints the total amount of ETH held in the contract")
   .addParam("contract", "The contract address")
-  .setAction(async (taskArgs) => {
-    const balance = await ethers.provider.getBalance(taskArgs);
+  .setAction(async (taskArgs, { ethers }) => {
+    const provider = new ethers.providers.InfuraProvider(
+      "goerli",
+      process.env.ID
+    );
+    const balance = await provider.getBalance(taskArgs.contract);
     console.log(ethers.utils.formatEther(balance), "ETH");
   });
 
