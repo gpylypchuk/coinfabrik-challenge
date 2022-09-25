@@ -26,3 +26,9 @@
 5. Now go to [Goerli](https://goerli.etherscan.io/) and paste the address of the contract.
 6. Verify the contract. To do this type in console: `npx hardhat verify --network goerli DEPLOYED_CONTRACT_ADDRESS`
 7. Done!, Now, you can test easily the contract in [Goerli Testnet](https://goerli.etherscan.io/)!
+
+#### For Local Deploy
+
+1. Create a local network with Hardhat: `npx hardhat node`
+2. Now, deploy it in there: `npx hardhat run --network localhost ./scripts/deploy-ethPool.ts`
+3. Done!, now with `npx hardhat console --network localhost` you can interact with the contract calling the differents functions (with ethers)
