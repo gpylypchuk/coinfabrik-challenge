@@ -5,10 +5,8 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-// Total amount of ETH held in the contract (ETHPoolV1)
-// @run npx hardhat held --contract 0x2C129bE4E59F56D8995bEFB38022a2F3c714d7b6
-
-// DEPLOYED CONTRACT (ETHPoolV2): 0x86d1beB3Ea0a7cda5BB24Ff4d13c1f9079CD3c5d
+// Total amount of ETH held in the contract (ETHPool)
+// @run npx hardhat held --contract DEPLOYED_CONTRACT_ADDRESS
 
 task("held", "Prints the total amount of ETH held in the contract")
   .addParam("contract", "The contract address")
@@ -24,6 +22,8 @@ task("held", "Prints the total amount of ETH held in the contract")
 // GOERLI TESTNET DEPLOY
 // @run TESTNET: npx hardhat run --network goerli ./scripts/deploy-ethPool.ts
 // @run VERIFY: npx hardhat verify --network goerli DEPLOYED_CONTRACT_ADDRESS
+//
+// DEPLOYED CONTRACT (VERIFIED): https://goerli.etherscan.io/address/0xCbb8ED45736F3D4728204A5C35304733c189B806#code
 
 const config: HardhatUserConfig = {
   solidity: {

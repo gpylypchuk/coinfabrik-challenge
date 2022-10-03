@@ -2,91 +2,54 @@
 pragma solidity 0.8.17;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 
-/**
- * @title Ether Pool
- * @dev Challenge Solution for Exactly Finance
- */
-
-contract ETHPoolV2 is AccessControl {
-  /************************ 
-  ======== EVENTS ========
-  *************************/
-
-  event Withdrew(address indexed user, uint256 amount, bytes data);
-
-  event Deposited(address indexed user, uint256 amount);
-
-  event DepositedRewards(uint256 amount);
-
-  /************************ 
-  ==== STATE VARIABLES ====
-  *************************/
+contract ETHPool is AccessControl {
+  event Deposit(address indexed user, uint256 amount);
+  event Withdrew(address indexed user, uint256 amount);
+  event DepositedRewards(address indexed account, uint256 rewards);
 
   bytes32 public constant TEAM_MEMBER = keccak256("TEAM_MEMBER");
 
-  // Total Shares Distributed
-  uint256 private _shares;
-
-  // User shares held
-  mapping(address => uint256) public share;
-
-  /********************** 
-  ===== CONSTRUCTOR =====
-  ***********************/
+  mapping(address => uint256) public userShares;
+  uint256 public totalShares;
 
   constructor() {
     _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     _grantRole(TEAM_MEMBER, msg.sender);
   }
 
-  /*********************** 
-  === PUBLIC FUNCTIONS ===
-  ************************/
-
   function deposit() external payable {
-    uint256 amount = msg.value;
-    uint256 pool = address(this).balance - amount;
-    uint256 amountOfShares;
+    uint256 depositValue = msg.value;
+    uint256 poolEth = address(this).balance - depositValue;
 
-    if (_shares * pool == 0) {
-      amountOfShares = amount;
-    } else {
-      (amount * _shares) / pool;
-    }
+    uint256 share = (totalShares * poolEth == 0)
+      ? depositValue
+      : (depositValue * totalShares) / poolEth;
 
-    unchecked {
-      _shares += amountOfShares;
-      share[msg.sender] += amountOfShares;
-    }
+    totalShares += share;
 
-    emit Deposited(msg.sender, amount);
+    userShares[msg.sender] += share;
+
+    emit Deposit(msg.sender, depositValue);
   }
 
   function withdraw() external {
-    uint256 pool = address(this).balance;
-    uint256 amount = (share[msg.sender] * pool) / _shares;
+    uint256 amount = (userShares[msg.sender] * address(this).balance) /
+      totalShares;
 
-    _shares -= share[msg.sender];
-    share[msg.sender] = 0;
+    totalShares -= userShares[msg.sender];
+    userShares[msg.sender] = 0;
 
-    (bool success, bytes memory data) = payable(msg.sender).call{
-      value: amount
-    }("");
+    Address.sendValue(payable(msg.sender), amount);
 
-    require(success, "Withdraw: Withdrawal failed");
-
-    emit Withdrew(msg.sender, amount, data);
+    emit Withdrew(msg.sender, amount);
   }
 
   function depositRewards() public payable onlyRole(TEAM_MEMBER) {
-    emit DepositedRewards(msg.value);
+    emit DepositedRewards(msg.sender, msg.value);
   }
 
-  /**
-   * @dev This receive function with revert evits dust ether or
-   * possibles kill hacks.
-   */
   receive() external payable {
     revert("No Receive: Only with Deposit function");
   }

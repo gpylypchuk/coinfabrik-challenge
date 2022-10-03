@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 
 async function main() {
-  const ETHPool = await ethers.getContractFactory("ETHPoolV2");
+  const ETHPool = await ethers.getContractFactory("ETHPool");
   const ethPool = await ETHPool.deploy();
 
   await ethPool.deployed();
