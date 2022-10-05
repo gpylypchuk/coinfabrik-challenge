@@ -21,6 +21,11 @@ contract ETHPool is AccessControl {
 
   function deposit() external payable {
     uint256 depositValue = msg.value;
+
+    require(
+      address(this).balance >= depositValue,
+      "Deposit: Contract balance is less than deposit amount"
+    );
     uint256 poolEth = address(this).balance - depositValue;
 
     uint256 share = (totalShares * poolEth == 0)
@@ -48,9 +53,5 @@ contract ETHPool is AccessControl {
 
   function depositRewards() public payable onlyRole(TEAM_MEMBER) {
     emit DepositedRewards(msg.sender, msg.value);
-  }
-
-  receive() external payable {
-    revert("No Receive: Only with Deposit function");
   }
 }

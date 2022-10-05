@@ -104,9 +104,8 @@ describe("Ethereum Pool contract", function () {
 
     it("Should revert by sending Ether with transaction", async function () {
       const amount = ethers.utils.parseEther("1");
-      await expect(
-        user1.sendTransaction({ to: pool.address, value: amount })
-      ).to.be.revertedWith("No Receive: Only with Deposit function");
+      await expect(user1.sendTransaction({ to: pool.address, value: amount }))
+        .to.be.reverted;
     });
 
     it("Should Able to withdraw with his rewards", async function () {
